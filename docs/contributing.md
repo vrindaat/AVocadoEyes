@@ -66,10 +66,11 @@ uncommitted edits, local state, and Codex conversations do not transfer.
 ## Verification and delivery
 
 For this documentation bootstrap, verify relative Markdown links, the guide copy,
-ignore patterns, and `git diff --check`. There is currently no app test suite or
-CI workflow. Add actual install/build/test commands and suitable CI with the first
-runnable implementation; do not invent successful checks or make the demo depend
-on a hosted CI runner having a GB10.
+ignore patterns, and `git diff --check`. The workbench checks are
+`.venv/bin/python -m unittest discover -s tests -v` after installing
+`requirements.txt` in `.venv`. CI runs fixture, video and loopback HTTP checks
+without a model or GB10. See README for the separate real-model route check;
+fixture tests do not establish the GB10 demo or managed runtime path.
 
 The GB10 integration owner must record an actual end-to-end local inference run
 in the PR/issue, including source commit, environment, model, command, input, and

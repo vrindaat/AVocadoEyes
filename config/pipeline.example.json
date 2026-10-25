@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "models": {"vision": "qwen3.5:9b", "reasoning": "qwen3.5:9b"},
+  "steps": [
+    {"id":"sample", "kind":"sample", "inputs":{"video":"$video"}, "settings":{"count":8,"seconds":12}},
+    {"id":"observe", "kind":"observe", "inputs":{"frames":"$sample.frames"}, "settings":{"temperature":0.2,"num_predict":4096,"think":false,"format":"json"}, "model":"vision", "prompt":"@prompts/observe.txt", "extra":{}},
+    {"id":"validate", "kind":"validate", "inputs":{"observations":"$observe","frames":"$sample.frames"}, "settings":{}},
+    {"id":"rank", "kind":"rank", "inputs":{"observations":"$validate","context":"$context","rubric":"$rubric"}, "settings":{"temperature":0.2,"num_predict":3072,"think":false,"format":"json"}, "model":"reasoning", "prompt":"@prompts/rank.txt", "extra":{}}
+  ]
+}

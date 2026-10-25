@@ -36,7 +36,8 @@ apply to both contributors and their Codex sessions.
 - Keep credentials, private footage, model weights, runtime state, and personal
   Codex settings out of Git. Track safe configuration examples when needed.
 - Run checks appropriate to the change, report exact commands/results and gaps,
-  and update affected active specs/contracts/architecture. There is no application
-  build or test command yet; do not report one as passing.
+  and update affected active specs/contracts/architecture. Application checks:
+  `.venv/bin/python -m unittest discover -s tests -v`. Local model/GB10 integration
+  requires separate evidence; fixture tests do not prove it.
 
 Process edits use the same PR review as code so both contributors adopt one SDD.

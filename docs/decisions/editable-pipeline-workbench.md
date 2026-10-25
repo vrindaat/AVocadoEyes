@@ -8,8 +8,11 @@ the architecture or product specification.
 
 Audience: AVocadoEyes contributors and reviewers. Accountable owner and reviewer:
 unassigned; record actual assignments and acceptance in the implementation issue.
-Related issue: none supplied or created for this documentation request; link the
-real originating issue before acceptance or implementation.
+Related issue: https://github.com/vrindaat/AVocadoEyes/issues/1 (implementation).
+The user subsequently requested implementation and selected local Ollama
+`qwen3.5:9b` for both passes, with no Internet use by the pipeline. Implementation
+scope and verification are in the [workbench spec](../specs/editable-pipeline-workbench.md).
+Team reviewer acceptance and GB10 runtime verification remain pending.
 
 ## Context and requested capability
 

@@ -16,9 +16,11 @@ apply to both contributors and their Codex sessions.
 - Before feature implementation, record outcome and verification in the issue
   and required artifact. Draft specs are proposals, not accepted requirements.
   Record actual owner/reviewer acceptance; never invent agreement or issue IDs.
-- Use separate clones or worktrees and one branch per change. Check status and
+- Do not create worktrees for any changes unless the user explicitly requests one.
+  Work in the current checkout and use one branch per change. Check status and
   fetch before starting; preserve the other contributor's changes. Coordinate
-  overlapping files and interfaces in the issue before editing them.
+  overlapping files and interfaces in the issue before editing them. This rule
+  takes precedence over worktree guidance in linked documents.
 - Meaningful implementation commits reference the issue (`Refs #<issue>`).
   PRs list affected specs/ADRs/contracts and verification. Follow
   [contributing](docs/contributing.md) for review, merge, and handoff.

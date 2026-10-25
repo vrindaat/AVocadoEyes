@@ -25,7 +25,7 @@ coverage/
 .next/
 
 # Local data, model weights, runtime bundles, and generated evidence
-data/local/
+data/
 models/
 recordings/
 artifacts/

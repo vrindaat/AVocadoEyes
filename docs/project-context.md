@@ -112,6 +112,13 @@ establish conversation content or reliably establish who is speaking.
 
 ### Working Ollama download shortlist
 
+Subsequent implementation direction (2026-10-25): the user selected local
+`qwen3.5:9b` for both workbench passes and no Internet use by the running pipeline.
+The native local Ollama adapter is implemented; current verification and remaining
+managed-stack/product gaps are in the [workbench spec](specs/editable-pipeline-workbench.md)
+and [issue #1](https://github.com/vrindaat/AVocadoEyes/issues/1). The original
+shortlist below remains historical context, not an instruction to download models.
+
 These are the selected candidates from the conversation, not accepted production
 models. Approximate package sizes were discussed; verify the exact current tag,
 quantization, capabilities, and size before downloading.

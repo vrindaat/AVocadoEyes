@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:avocadoeyes:workbench-output:1",
+  "title": "Workbench model outputs v1",
+  "$comment": "Owner: repository maintainers (assignment pending #1). Consumers: local runner and prompts. Breaking changes require new version and migration; additive optional fields are compatible. CI validates examples and negative fixtures. https://github.com/vrindaat/AVocadoEyes/issues/1",
+  "$defs": {
+    "box": {"type":"array", "minItems":4, "maxItems":4, "items":{"type":"number","minimum":0,"maximum":1}},
+    "observation": {
+      "type":"object", "required":["people","unknowns"], "properties":{
+        "people":{"type":"array","items":{"type":"object","required":["id","identity_uncertain","locations","evidence"],"properties":{
+          "id":{"type":"string","minLength":1},
+          "identity_uncertain":{"type":"boolean"},
+          "locations":{"type":"array","minItems":1,"items":{"type":"object","required":["frame_id","box"],"properties":{"frame_id":{"type":"string"},"box":{"$ref":"#/$defs/box"}}}},
+          "evidence":{"type":"array","items":{"type":"object","required":["id","frame_id","cue","visibility","alternatives"],"properties":{
+            "id":{"type":"string","minLength":1},"frame_id":{"type":"string"},"cue":{"type":"string","minLength":1},
+            "visibility":{"enum":["present","observed_absent","unobservable"]},"alternatives":{"type":"array","items":{"type":"string"}}
+          }}}
+        }}},
+        "unknowns":{"type":"array","items":{"type":"string"}}
+      }
+    },
+    "ranking": {
+      "type":"object","required":["status","candidates","unknowns"],"properties":{
+        "status":{"enum":["ok","insufficient_evidence"]},
+        "candidates":{"type":"array","items":{"type":"object","required":["person_id","preference_index","connection","effort","reason","evidence_ids","uncertainty"],"properties":{
+          "person_id":{"type":"string"},"preference_index":{"type":"number","minimum":0,"maximum":100},
+          "connection":{"type":"string","minLength":1},"effort":{"type":"string","minLength":1},"reason":{"type":"string","minLength":1},
+          "evidence_ids":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string"}},"uncertainty":{"type":"string","minLength":1}
+        }}},
+        "unknowns":{"type":"array","items":{"type":"string"}}
+      }
+    }
+  }
+}

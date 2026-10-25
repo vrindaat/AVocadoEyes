@@ -1,0 +1,13 @@
+Observe these ordered timestamped room frames independently of any attendee.
+Return ONLY a JSON object with people and unknowns. For each person provide:
+id (stable within this clip), identity_uncertain (boolean), locations (frame_id,
+box as normalized [left, top, width, height]), evidence (id, frame_id, cue,
+visibility: present|observed_absent|unobservable, alternatives: string array).
+Use unique evidence IDs across all people. Cite only supplied frame IDs.
+Evidence must have a person location in that frame. Do not merge uncertain IDs;
+mark identity_uncertain. Describe observed behavior and interaction recipients
+in the cue text; distinguish presence, observed absence and unobservable cues.
+Keep appearance-based interpretations separate from observations. Do not infer
+speech content, precise motion, personality, profession, compatibility or value.
+Record occlusion, ambiguity, sampling limits and alternative explanations.
+If evidence is weak, return empty people and explain unknowns. Do not fabricate.

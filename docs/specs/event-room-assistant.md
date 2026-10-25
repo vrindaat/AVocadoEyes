@@ -5,6 +5,10 @@ Owner: Unassigned; assign the accountable product/code owner in the originating 
 Related issue: Not created; link the real issue before acceptance/implementation.
 Acceptance: Not yet accepted by the team.
 
+The user has separately authorized the [editable workbench prototype](editable-pipeline-workbench.md)
+in [issue #1](https://github.com/vrindaat/AVocadoEyes/issues/1). That implementation
+does not establish product validation or team acceptance of this broader spec.
+
 ## Outcome
 
 Help an attendee choose **who to approach** in a networking room using visible

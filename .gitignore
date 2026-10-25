@@ -1,0 +1,53 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+
+# Machine-local Codex state; AGENTS.md and docs are shared instructions
+.codex/
+AGENTS.override.md
+
+# Dependencies and build outputs
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+coverage/
+.next/
+
+# Local data, model weights, runtime bundles, and generated evidence
+data/local/
+models/
+recordings/
+artifacts/
+runtime/
+.ollama/
+.nemoclaw/
+.openclaw/
+.openshell/
+*.gguf
+*.safetensors
+*.pt
+*.pth
+*.onnx
+*.tar
+*.tar.gz
+*.tgz
+*.log
+
+# Editor and OS state
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+tmp/
+temp/

@@ -1,0 +1,414 @@
+{
+    "version":  "0.2",
+    "purpose":  "Source inventory and paraphrased knowledge-base seed notes for personalized visual conversation recommendations.",
+    "rubric_status":  "proposed_unvalidated",
+    "important_distinction":  "Human-impression agreement, cue detection and personalized conversation-outcome prediction are different evaluation targets.",
+    "sources":  [
+                    {
+                        "id":  "S01",
+                        "title":  "Nonverbal Communication",
+                        "authors":  "Hall, Horgan \u0026 Murphy",
+                        "year":  2019,
+                        "type":  "review",
+                        "url":  "https://doi.org/10.1146/annurev-psych-010418-103145",
+                        "finding":  "Reviews the production, perception and measurement of nonverbal cues across face, voice, body and interpersonal space.",
+                        "setting":  "Multiple research settings.",
+                        "outcome":  "Nonverbal behavior and interpersonal perception.",
+                        "use":  "Build a cue vocabulary and contextual interpretation rules.",
+                        "limit":  "A review, not a validated event-conversation scoring formula.",
+                        "tags":  [
+                                     "observation",
+                                     "context",
+                                     "measurement"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S02",
+                        "title":  "On the Accuracy of Personality Judgment: A Realistic Approach",
+                        "authors":  "David C. Funder",
+                        "year":  1995,
+                        "type":  "theoretical_framework",
+                        "url":  "https://rap.ucr.edu/FunderPR1995.pdf",
+                        "finding":  "The Realistic Accuracy Model links accuracy to relevance, availability, detection and appropriate utilization of behavioral cues.",
+                        "setting":  "Personality judgment theory.",
+                        "outcome":  "Conditions for accurate judgment.",
+                        "use":  "Check relevance and observability before interpreting a cue.",
+                        "limit":  "Does not establish that any particular event cue predicts conversation enjoyment.",
+                        "tags":  [
+                                     "accuracy",
+                                     "evidence_quality",
+                                     "framework"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S03",
+                        "title":  "Personality Judgments Based on Physical Appearance",
+                        "authors":  "Naumann, Vazire, Rentfrow \u0026 Gosling",
+                        "year":  2009,
+                        "type":  "empirical_correlational",
+                        "url":  "https://ww.simine.com/docs/Naumann_et_al_PSPB_2009.pdf",
+                        "finding":  "Observers\u0027 full-body photograph judgments correlated with self/peer criteria for several traits; spontaneous presentation provided broader information than constrained poses.",
+                        "setting":  "Full-body photographs with standardized or spontaneous presentation.",
+                        "outcome":  "Agreement with self/peer personality reports.",
+                        "use":  "Motivate joint observation of dress, posture and expression.",
+                        "limit":  "Does not establish personalized conversation compatibility or permit treating an individual\u0027s appearance as a personality diagnosis.",
+                        "tags":  [
+                                     "appearance",
+                                     "posture",
+                                     "expression",
+                                     "dress"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S04",
+                        "title":  "Dress Is a Fundamental Component of Person Perception",
+                        "authors":  "Hester \u0026 Hehman",
+                        "year":  2023,
+                        "type":  "review_and_framework",
+                        "url":  "https://doi.org/10.1177/10888683231157961",
+                        "finding":  "Proposes integrating dress, face/body, context and perceiver characteristics, including aesthetic preferences, into person-perception research.",
+                        "setting":  "Review of dress and impression formation.",
+                        "outcome":  "How observers form impressions.",
+                        "use":  "Model user-specific aesthetic affinity and contextual dress descriptions.",
+                        "limit":  "The organizing categories are proposed, not an empirically derived compatibility scale; impressions are not necessarily accurate.",
+                        "tags":  [
+                                     "dress",
+                                     "aesthetic_affinity",
+                                     "personalization"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S05",
+                        "title":  "Dominant, Open Nonverbal Displays Are Attractive at Zero-Acquaintance",
+                        "authors":  "Vacharkulksemsuk et al.",
+                        "year":  2016,
+                        "type":  "field_observation_and_experiment",
+                        "url":  "https://pmc.ncbi.nlm.nih.gov/articles/PMC4839399/",
+                        "finding":  "Expansive posture predicted speed-date interest; experimentally varied postures in dating photographs affected selection.",
+                        "setting":  "Speed dating and a dating application.",
+                        "outcome":  "Initial romantic interest and partner selection.",
+                        "use":  "Include postural expansiveness as an observable candidate feature.",
+                        "limit":  "Romantic selection is not evidence of friendly conversation enjoyment; do not infer dominance as an individual\u0027s true trait.",
+                        "tags":  [
+                                     "posture",
+                                     "initial_attraction",
+                                     "domain_limit"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S06",
+                        "title":  "Giving Men the Come-On: Effect of Eye Contact and Smiling in a Bar Environment",
+                        "authors":  "Walsh \u0026 Hewitt",
+                        "year":  1985,
+                        "type":  "field_experiment",
+                        "url":  "https://doi.org/10.2466/pms.1985.61.3.873",
+                        "finding":  "Repeated eye contact combined with smiling produced more approaches than the other tested conditions.",
+                        "setting":  "A small bar study involving female confederates and male strangers.",
+                        "outcome":  "Whether the stranger approached and spoke.",
+                        "use":  "Consider combinations and direction of acknowledgment cues.",
+                        "limit":  "Does not establish conversation quality or generalize directly to all genders, cultures or event types.",
+                        "tags":  [
+                                     "gaze",
+                                     "smile",
+                                     "acknowledgment"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S07",
+                        "title":  "A Recipe for Friendship: Similar Food Consumption Promotes Trust and Cooperation",
+                        "authors":  "Woolley \u0026 Fishbach",
+                        "year":  2017,
+                        "type":  "experiments",
+                        "url":  "https://kaitlinwoolley.com/wp-content/uploads/2017/08/woolleyfishbachjcp.pdf",
+                        "finding":  "Assigned similar food consumption increased trust-game behavior and negotiation cooperation relative to dissimilar consumption.",
+                        "setting":  "Experimental interactions and judgments involving food.",
+                        "outcome":  "Trust and cooperation under the tested conditions.",
+                        "use":  "Treat shared consumption as a candidate relational context or conversation hook.",
+                        "limit":  "A food item alone does not establish personality, trustworthiness, preference or enjoyable conversation.",
+                        "tags":  [
+                                     "food",
+                                     "shared_context",
+                                     "conversation_hook"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S08",
+                        "title":  "The Imbibing Idiot Bias: Consuming Alcohol Can Be Hazardous to Your (Perceived) Intelligence",
+                        "authors":  "Rick \u0026 Schweitzer",
+                        "year":  2013,
+                        "type":  "experiments",
+                        "url":  "https://faculty.wharton.upenn.edu/wp-content/uploads/2014/06/Imbibing-Idiot-Bias_1.pdf",
+                        "finding":  "Alcohol cues reduced perceived intelligence without evidence of impaired performance.",
+                        "setting":  "Impression-formation and professional scenarios.",
+                        "outcome":  "Perceived intelligence and hireability.",
+                        "use":  "An example of a cue that affects impressions without demonstrating the inferred attribute.",
+                        "limit":  "Never use drink category to infer intelligence, impairment or conversation quality.",
+                        "tags":  [
+                                     "drink",
+                                     "bias",
+                                     "invalid_inference"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S09",
+                        "title":  "Thin Slices of Expressive Behavior as Predictors of Interpersonal Consequences: A Meta-Analysis",
+                        "authors":  "Ambady \u0026 Rosenthal",
+                        "year":  1992,
+                        "type":  "meta_analysis",
+                        "url":  "https://web.mit.edu/curhan/www/docs/Articles/15341_Readings/Self-presentation_Impression_Formation/Ambady_%26_Rosenthal_1992_Thin_slices.pdf",
+                        "finding":  "Brief expressive-behavior judgments were associated with varied social and clinical outcomes; aggregate correlation across 38 results was about .39.",
+                        "setting":  "Multiple studies using observations under five minutes.",
+                        "outcome":  "Varied external outcomes.",
+                        "use":  "Motivate testing short behavioral samples.",
+                        "limit":  "The aggregate correlation is not classification accuracy or an event-specific compatibility estimate.",
+                        "tags":  [
+                                     "thin_slices",
+                                     "predictive_validity"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S10",
+                        "title":  "Emotional Expressions Reconsidered: Challenges to Inferring Emotion From Human Facial Movements",
+                        "authors":  "Barrett et al.",
+                        "year":  2019,
+                        "type":  "review",
+                        "url":  "https://doi.org/10.1177/1529100619832930",
+                        "finding":  "Facial movements vary substantially with context and do not provide a simple universal diagnostic mapping to emotion categories.",
+                        "setting":  "Review of facial-movement and emotion research.",
+                        "outcome":  "Evidence for expression-to-emotion inference.",
+                        "use":  "Separate visible movement from inferred emotional state.",
+                        "limit":  "Neither establishes that expressions are meaningless nor validates reading a private emotional state from a face.",
+                        "tags":  [
+                                     "expression",
+                                     "context",
+                                     "inference_limits"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S11",
+                        "title":  "F-Formation Detection: Individuating Free-Standing Conversational Groups in Images",
+                        "authors":  "Setti, Russell, Bassetti \u0026 Cristani",
+                        "year":  2015,
+                        "type":  "computational_method",
+                        "url":  "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0123783",
+                        "finding":  "Models free-standing interaction groups using position and orientation, grounded in the F-formation concept.",
+                        "setting":  "Group detection in images.",
+                        "outcome":  "Conversational group detection.",
+                        "use":  "Describe spatial access and group arrangement.",
+                        "limit":  "Detecting a group or a gap does not establish permission to join or future enjoyment.",
+                        "tags":  [
+                                     "spatial_access",
+                                     "group_formation"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S12",
+                        "title":  "ConfLab: A Data Collection Concept, Dataset, and Benchmark for Machine Analysis of Free-Standing Social Interactions in the Wild",
+                        "authors":  "Raman et al.",
+                        "year":  2022,
+                        "type":  "dataset_and_benchmarks",
+                        "url":  "https://papers.nips.cc/paper_files/paper/2022/hash/95f9ad2e251e9014697589037450f9bb-Abstract-Datasets_and_Benchmarks.html",
+                        "finding":  "Records a professional networking event with 48 participants and provides benchmarks including speaking activity and group formation.",
+                        "setting":  "A conference networking event; overhead video and wearable sensors.",
+                        "outcome":  "Behavioral annotations and perception benchmarks.",
+                        "use":  "Study event annotation and group/behavior measurement.",
+                        "limit":  "Not a dataset of personalized conversation satisfaction; camera view differs from first-person footage.",
+                        "tags":  [
+                                     "dataset",
+                                     "networking",
+                                     "annotation"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S13",
+                        "title":  "First Impressions: A Survey on Vision-Based Apparent Personality Trait Analysis",
+                        "authors":  "Jacques Junior et al.",
+                        "year":  2019,
+                        "type":  "technical_review",
+                        "url":  "https://arxiv.org/abs/1804.08046",
+                        "finding":  "Reviews vision-based apparent-personality analysis, datasets, subjective labels and methodological limitations.",
+                        "setting":  "Computational first-impression research.",
+                        "outcome":  "Predictions of observer-attributed traits.",
+                        "use":  "Understand technical approaches and evaluation pitfalls.",
+                        "limit":  "Predicting apparent traits is distinct from predicting real personality or conversation outcomes.",
+                        "tags":  [
+                                     "computer_vision",
+                                     "evaluation",
+                                     "apparent_personality"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "B01",
+                        "title":  "The Social Psychology of Perceiving Others Accurately",
+                        "authors":  "Hall, Schmid Mast \u0026 West (editors)",
+                        "year":  2016,
+                        "type":  "edited_academic_book",
+                        "url":  "https://doi.org/10.1017/CBO9781316181959",
+                        "finding":  "An academic reference on interpersonal accuracy across domains.",
+                        "setting":  "Multiple domains of interpersonal perception.",
+                        "outcome":  "Theories, evidence and methods.",
+                        "use":  "Knowledge-base foundation for accuracy and observer differences.",
+                        "limit":  "Book-level description; retrieve and cite the relevant chapter when making specific empirical claims.",
+                        "tags":  [
+                                     "book",
+                                     "accuracy"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "B02",
+                        "title":  "Conducting Interaction: Patterns of Behavior in Focused Encounters",
+                        "authors":  "Adam Kendon",
+                        "year":  1990,
+                        "type":  "academic_book",
+                        "url":  "https://books.google.com/books/about/Conducting_Interaction.html?id=7-8zAAAAIAAJ",
+                        "finding":  "Observational studies of gaze, greetings, facial behavior, attention and spatial organization.",
+                        "setting":  "Face-to-face interaction.",
+                        "outcome":  "Organization of interaction.",
+                        "use":  "Develop operational definitions for orientation, greeting and interaction entry.",
+                        "limit":  "Not a validated numerical scoring scheme for personalized compatibility.",
+                        "tags":  [
+                                     "book",
+                                     "observation",
+                                     "spatial_access"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "B03",
+                        "title":  "Sequential Analysis and Observational Methods for the Behavioral Sciences",
+                        "authors":  "Bakeman \u0026 Quera",
+                        "year":  2011,
+                        "type":  "methods_book",
+                        "url":  "https://doi.org/10.1017/CBO9781139017343",
+                        "finding":  "Explains behavioral coding schemes, observer training, reliability and sequential analysis.",
+                        "setting":  "Behavioral observation research.",
+                        "outcome":  "Reliable measurement and sequential analysis.",
+                        "use":  "Design annotations and evaluate coder agreement.",
+                        "limit":  "Methodological guidance; does not validate this proposed rubric.",
+                        "tags":  [
+                                     "book",
+                                     "methods",
+                                     "reliability"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "B04",
+                        "title":  "Snoop: What Your Stuff Says About You",
+                        "authors":  "Sam Gosling",
+                        "year":  2008,
+                        "type":  "accessible_research_book",
+                        "url":  "https://www.hachette.co.uk/titles/sam-gosling/snoop/9780465013821/",
+                        "finding":  "Accessible account of research on belongings and environments as cues to people.",
+                        "setting":  "Personal spaces and possessions; linked edition is a later paperback.",
+                        "outcome":  "Person perception from environmental information.",
+                        "use":  "Generate hypotheses about chosen objects and self-presentation.",
+                        "limit":  "Distinguish accumulated personal environments from an incidental object carried at an event.",
+                        "tags":  [
+                                     "book",
+                                     "possessions",
+                                     "hypothesis_generation"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "summary_kind":  "paraphrased_source_note",
+                        "status":  "seed_note_verify_full_text_before_expansion"
+                    },
+                    {
+                        "id":  "S14",
+                        "title":  "A Closer Look at First Sight: Social Relations Lens Model Analysis of Personality and Interpersonal Attraction at Zero Acquaintance",
+                        "authors":  "Back, Schmukle \u0026 Egloff",
+                        "year":  2011,
+                        "type":  "observational_initial_encounter_study",
+                        "url":  "https://doi.org/10.1002/per.790",
+                        "local_source":  "User-supplied Back PDF inspected in the prior session; original not redistributed.",
+                        "finding":  "Visible and audible cue factors were associated with aggregate initial liking; observer-preference-to-appearance fit had a small association with unique liking (r=.12).",
+                        "setting":  "73 German psychology freshmen giving introductions averaging 7.49 seconds.",
+                        "outcome":  "Initial liking/desire to get acquainted and expected liking; not actual enjoyment.",
+                        "use":  "Separate general appeal from personalized style affinity; consult back-2011-cue-evidence.json for verified cue correlations and limitations.",
+                        "limit":  "Observational, small cohort, subjective mixed cue factors; no held-out enjoyment prediction. In-sample R-squared .67 is not accuracy.",
+                        "locators":  [
+                                         "Printed pp.229-230: cue definitions",
+                                         "p.232: regression",
+                                         "p.233: Figure 2 and Table 3",
+                                         "p.234: Figure 3"
+                                     ],
+                        "tags":  [
+                                     "personalization",
+                                     "initial_liking",
+                                     "appearance",
+                                     "movement"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "status":  "full_text_read_relevant_figures_visually_verified"
+                    },
+                    {
+                        "id":  "S15",
+                        "title":  "A Meta-Analytic Investigation of the Relation Between Interpersonal Attraction and Enacted Behavior",
+                        "authors":  "Montoya, Kershaw \u0026 Prosser",
+                        "year":  2018,
+                        "type":  "meta_analysis",
+                        "url":  "https://doi.org/10.1037/bul0000148",
+                        "finding":  "309 effect sizes, N=5422, associate attraction with enacted behavior.",
+                        "setting":  "Multiple interaction studies.",
+                        "outcome":  "Reported interpersonal attraction and behavior.",
+                        "use":  "Support testing affiliative cue sequences.",
+                        "limit":  "Does not validate pre-approach individualized enjoyment prediction.",
+                        "tags":  [
+                                     "attraction",
+                                     "affiliation",
+                                     "meta_analysis"
+                                 ],
+                        "reviewed_date":  "2026-10-24",
+                        "status":  "abstract_reviewed"
+                    }
+                ],
+    "detailed_cue_evidence_file":  "back-2011-cue-evidence.json",
+    "detailed_analysis_file":  "back-2011-cue-analysis.md",
+    "collection_note":  "Historical source inventory. Review/status flags are preserved; newer summaries in the Markdown research documents take precedence. This is not a complete inventory of later papers and not a predictor."
+}

@@ -1,0 +1,360 @@
+{
+    "version":  "0.2",
+    "status":  "research_extraction_not_validated_prediction_model",
+    "primary_source":  {
+                           "id":  "BACK2011",
+                           "doi":  "10.1002/per.790",
+                           "title":  "A Closer Look at First Sight: Social Relations Lens Model Analysis of Personality and Interpersonal Attraction at Zero Acquaintance",
+                           "year":  2011,
+                           "read_scope":  "All 14 pages extracted; Methods and Results read; printed pages 232-234 visually verified.",
+                           "sample":  {
+                                          "n_people":  73,
+                                          "female":  52,
+                                          "male":  21,
+                                          "mean_age":  22.32,
+                                          "country":  "Germany",
+                                          "population":  "Psychology freshmen in an introductory session",
+                                          "n_unordered_dyads":  2628,
+                                          "n_directed_pairs":  5256,
+                                          "mean_introduction_seconds":  7.49,
+                                          "range_introduction_seconds":  [
+                                                                             4,
+                                                                             21.3
+                                                                         ]
+                                      },
+                           "design":  "Observational first-introduction study; cues not randomized.",
+                           "coding":  "63 cues reduced to 15 factors; seven groups of four trained raters assessed separate cue domains.",
+                           "outcomes":  [
+                                            "Initial liking and desire to get acquainted",
+                                            "Expected liking by the target"
+                                        ],
+                           "not_outcomes":  [
+                                                "Actual conversation enjoyment",
+                                                "Actual approach choice",
+                                                "Long-term friendship quality",
+                                                "Confirmed reciprocity"
+                                            ],
+                           "statistic_warning":  "Figure 2 values are partial correlations with aggregate target popularity controlling age and sex; they are neither personal success probabilities nor independent additive weights.",
+                           "target_cue_correlations":  [
+                                                           {
+                                                               "id":  "fashionable_body_dress",
+                                                               "original_factor_label":  "Fashionable body and dress",
+                                                               "r_with_general_liking":  0.29,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "Composite includes fashion/chic ratings and body/fit judgments; not a pure clothing effect.",
+                                                               "recommended_use":  "descriptive_plus_user_preference"
+                                                           },
+                                                           {
+                                                               "id":  "body_weight",
+                                                               "original_factor_label":  "Weight",
+                                                               "r_with_general_liking":  -0.05,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "No meaningful general-liking association here.",
+                                                               "recommended_use":  "exclude_from_recommendation"
+                                                           },
+                                                           {
+                                                               "id":  "fashionable_face_hairstyle",
+                                                               "original_factor_label":  "Fashionable face and hairstyle",
+                                                               "r_with_general_liking":  0.21,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "Weak/marginal; composite mixes grooming with facial judgments.",
+                                                               "recommended_use":  "hairstyle_descriptors_only"
+                                                           },
+                                                           {
+                                                               "id":  "babyfaceness",
+                                                               "original_factor_label":  "Babyfaceness",
+                                                               "r_with_general_liking":  0.12,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "No meaningful general-liking association; not evidence of character.",
+                                                               "recommended_use":  "exclude_from_recommendation"
+                                                           },
+                                                           {
+                                                               "id":  "unusual_dress",
+                                                               "original_factor_label":  "Outlandishness of dress",
+                                                               "r_with_general_liking":  0.1,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "No clear general-liking association; personalized style fit is a different result.",
+                                                               "recommended_use":  "personalize_do_not_penalize"
+                                                           },
+                                                           {
+                                                               "id":  "movement_amount",
+                                                               "original_factor_label":  "Amount of body movement",
+                                                               "r_with_general_liking":  0.39,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "More body and expressive hand movement.",
+                                                               "recommended_use":  "candidate_feature"
+                                                           },
+                                                           {
+                                                               "id":  "movement_speed_energy",
+                                                               "original_factor_label":  "Speed and energy of body movement",
+                                                               "r_with_general_liking":  0.38,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "Fast gait, fast movement and observer-rated body tension.",
+                                                               "recommended_use":  "candidate_feature"
+                                                           },
+                                                           {
+                                                               "id":  "space_use",
+                                                               "original_factor_label":  "Extensiveness of behavior",
+                                                               "r_with_general_liking":  0.27,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "Taking up space and proximity to the audience during an introduction.",
+                                                               "recommended_use":  "candidate_contextual_feature"
+                                                           },
+                                                           {
+                                                               "id":  "movement_smoothness",
+                                                               "original_factor_label":  "Self-assuredness of movement",
+                                                               "r_with_general_liking":  0.51,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "Original factor blends smooth motion with gender-typical behavior; not pure confidence.",
+                                                               "recommended_use":  "reoperationalize_smoothness"
+                                                           },
+                                                           {
+                                                               "id":  "behavioral_nervousness",
+                                                               "original_factor_label":  "Nervousness of behavior",
+                                                               "r_with_general_liking":  -0.2,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "Weak/marginal; includes facial/hand nervousness, stance changes and reduced eye-contact seeking.",
+                                                               "recommended_use":  "record_components_not_emotion"
+                                                           },
+                                                           {
+                                                               "id":  "facial_friendliness",
+                                                               "original_factor_label":  "Friendliness of facial expression",
+                                                               "r_with_general_liking":  0.67,
+                                                               "modality":  "visual",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "Original composite: more smiling, more alert-looking expression and less grumpy-looking expression.",
+                                                               "recommended_use":  "record_components_not_emotion"
+                                                           },
+                                                           {
+                                                               "id":  "voice_strength",
+                                                               "original_factor_label":  "Strength of voice",
+                                                               "r_with_general_liking":  0.42,
+                                                               "modality":  "audio",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "Composite strong versus nervous-sounding voice.",
+                                                               "recommended_use":  "audio_only_candidate"
+                                                           },
+                                                           {
+                                                               "id":  "voice_pleasantness",
+                                                               "original_factor_label":  "Pleasantness of voice",
+                                                               "r_with_general_liking":  0.52,
+                                                               "modality":  "audio",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "Composite includes friendly voice and gender-typical voice; subjective/contextual.",
+                                                               "recommended_use":  "audio_only_reoperationalize"
+                                                           },
+                                                           {
+                                                               "id":  "content_cumbersomeness",
+                                                               "original_factor_label":  "Cumbersomeness of content",
+                                                               "r_with_general_liking":  0.03,
+                                                               "modality":  "audio_or_transcript",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "No meaningful general-liking association; do not penalize length from this finding.",
+                                                               "recommended_use":  "unsupported_as_negative_rule"
+                                                           },
+                                                           {
+                                                               "id":  "content_originality",
+                                                               "original_factor_label":  "Originality of content",
+                                                               "r_with_general_liking":  0.36,
+                                                               "modality":  "audio_or_transcript",
+                                                               "locator":  "Printed p.233 Figure 2; definitions pp.229-230",
+                                                               "interpretation_limit":  "Original, friendly and casual introduction content.",
+                                                               "recommended_use":  "audio_only_candidate"
+                                                           }
+                                                       ],
+                           "personalized_findings":  [
+                                                         {
+                                                             "finding":  "Preference similarity",
+                                                             "r":  0.14,
+                                                             "outcome":  "Unique liking",
+                                                             "locator":  "Printed p.233 Table 3"
+                                                         },
+                                                         {
+                                                             "finding":  "Clothing-preference similarity",
+                                                             "r":  0.12,
+                                                             "outcome":  "Unique liking",
+                                                             "locator":  "Printed p.233 Table 3"
+                                                         },
+                                                         {
+                                                             "finding":  "Subcultural-scene preference similarity",
+                                                             "r":  0.1,
+                                                             "outcome":  "Unique liking",
+                                                             "locator":  "Printed p.233 Table 3"
+                                                         },
+                                                         {
+                                                             "finding":  "Fit of observer preferences to target appearance, aggregate",
+                                                             "r":  0.12,
+                                                             "outcome":  "Unique liking",
+                                                             "locator":  "Printed p.234 Figure 3 and text"
+                                                         },
+                                                         {
+                                                             "finding":  "Fit of observer preferences to target appearance, aggregate",
+                                                             "r":  0.13,
+                                                             "outcome":  "Expected unique liking by target, not actual reciprocal liking",
+                                                             "locator":  "Printed p.234 text"
+                                                         }
+                                                     ],
+                           "null_or_weak_findings":  [
+                                                         {
+                                                             "finding":  "Big Five similarity",
+                                                             "r":  0.02,
+                                                             "outcome":  "Unique liking"
+                                                         },
+                                                         {
+                                                             "finding":  "Self-concept similarity",
+                                                             "r":  0.01,
+                                                             "outcome":  "Unique liking"
+                                                         },
+                                                         {
+                                                             "finding":  "Vocational-interest similarity",
+                                                             "r":  0,
+                                                             "outcome":  "Unique liking"
+                                                         }
+                                                     ],
+                           "model_fit":  {
+                                             "r_squared":  0.67,
+                                             "adjusted_r_squared":  0.57,
+                                             "predictors":  "Age, sex and 15 cue factors",
+                                             "target":  "Aggregate target popularity in the same sample",
+                                             "held_out_evaluation":  false,
+                                             "warning":  "Not 67% prediction accuracy; not variance explained in individualized enjoyment."
+                                         },
+                           "variance_components":  {
+                                                       "perceiver":  0.13,
+                                                       "target":  0.13,
+                                                       "relationship":  0.49,
+                                                       "error":  0.25,
+                                                       "warning":  "Describes variation in initial-liking ratings, not predictive performance."
+                                                   },
+                           "original_access":  "User-supplied PDF inspected in the prior research session; original not redistributed."
+                       },
+    "companion_sources":  [
+                              {
+                                  "id":  "NAUMANN2009",
+                                  "url":  "https://ww.simine.com/docs/Naumann_et_al_PSPB_2009.pdf",
+                                  "locator":  "Printed p.1668 Tables 3-4",
+                                  "outcome":  "Self/acquaintance-composite likability; separate observer impressions.",
+                                  "findings":  [
+                                                   {
+                                                       "cue":  "smiling",
+                                                       "r_with_criterion_likability":  0.26
+                                                   },
+                                                   {
+                                                       "cue":  "energetic_stance",
+                                                       "r_with_criterion_likability":  0.27
+                                                   },
+                                                   {
+                                                       "cue":  "tense_stance",
+                                                       "r_with_criterion_likability":  -0.23
+                                                   },
+                                                   {
+                                                       "cue":  "distinctive_appearance",
+                                                       "r_with_criterion_likability":  -0.22
+                                                   },
+                                                   {
+                                                       "cue":  "stylish_appearance",
+                                                       "r_with_criterion_likability":  0.14
+                                                   },
+                                                   {
+                                                       "cue":  "neat_appearance",
+                                                       "r_with_criterion_likability":  0.17
+                                                   },
+                                                   {
+                                                       "cue":  "folded_arms",
+                                                       "r_with_criterion_likability":  0.01
+                                                   }
+                                               ],
+                                  "warning":  "Photo correlations; no conversation outcomes. Last three associations above were not significant."
+                              },
+                              {
+                                  "id":  "HESTER2023",
+                                  "url":  "https://doi.org/10.1177/10888683231157961",
+                                  "type":  "Review/framework",
+                                  "finding":  "Dress judgments depend on observer preferences and context.",
+                                  "use":  "Describe style; collect preferences.",
+                                  "limit":  "No numerical compatibility scale."
+                              },
+                              {
+                                  "id":  "MONTOYA2018",
+                                  "url":  "https://doi.org/10.1037/bul0000148",
+                                  "type":  "Meta-analysis",
+                                  "finding":  "Attraction is associated with enacted affiliative behavior across 309 effects, N=5422.",
+                                  "use":  "Contextual gaze, smiling and interaction measures.",
+                                  "limit":  "Association does not identify pre-approach personalized enjoyment."
+                              },
+                              {
+                                  "id":  "VACHARKULKSEMSUK2016",
+                                  "url":  "https://pmc.ncbi.nlm.nih.gov/articles/PMC4839399/",
+                                  "type":  "Observation and experiment",
+                                  "finding":  "Expansive posture affected initial romantic selection.",
+                                  "use":  "Postural openness as a domain-limited candidate.",
+                                  "limit":  "Not general conversational enjoyment."
+                              },
+                              {
+                                  "id":  "WALSH1985",
+                                  "url":  "https://doi.org/10.2466/pms.1985.61.3.873",
+                                  "type":  "Field experiment",
+                                  "finding":  "Repeated eye contact plus smiling increased approaches in the tested bar setting.",
+                                  "use":  "Directed acknowledgment sequences.",
+                                  "limit":  "Approach outcome, not satisfaction."
+                              },
+                              {
+                                  "id":  "WOOLLEY2017",
+                                  "url":  "https://doi.org/10.1016/j.jcps.2016.06.003",
+                                  "type":  "Experiments",
+                                  "finding":  "Assigned food similarity affected trust/cooperation.",
+                                  "use":  "Shared consumption as context.",
+                                  "limit":  "No personality or enjoyment inference from an item."
+                              },
+                              {
+                                  "id":  "RICK2013",
+                                  "url":  "https://doi.org/10.1016/j.jcps.2012.06.001",
+                                  "type":  "Experiments",
+                                  "finding":  "Alcohol cues biased perceived intelligence.",
+                                  "use":  "Counterexample record.",
+                                  "limit":  "Do not use drink to infer intelligence or interaction quality."
+                              },
+                              {
+                                  "id":  "BARRETT2019",
+                                  "url":  "https://doi.org/10.1177/1529100619832930",
+                                  "type":  "Review",
+                                  "finding":  "Facial movements do not diagnose emotions universally.",
+                                  "use":  "Separate observation and interpretation.",
+                                  "limit":  "Do not infer private state from a face."
+                              }
+                          ],
+    "learning_design":  {
+                            "target":  "Participant-reported conversation enjoyment and willingness to talk again, evaluated after an encounter.",
+                            "feature_representations":  [
+                                                            "Visible smiling proportion, direction and sequence",
+                                                            "Gesture amount, speed and smoothness",
+                                                            "Stance-change count and spatial access",
+                                                            "Neutral clothing/accessory descriptors",
+                                                            "Explicit observer-style preference fit",
+                                                            "Current food/phone/hand-occupancy context as unvalidated timing hypotheses",
+                                                            "Voice/content only when audio exists"
+                                                        ],
+                            "separate_predictions":  [
+                                                         "Predicted first-impression appeal",
+                                                         "Personalized appearance affinity",
+                                                         "Current opening",
+                                                         "Actual enjoyment predictor, once validated"
+                                                     ],
+                            "unknown_rule":  "Unknown is not negative evidence.",
+                            "calibration_rule":  "No numerical personal success probabilities before held-out calibration.",
+                            "evaluation":  "Split by person and event; compare equal-information human judgments; do not treat dyads or clips as independent people.",
+                            "no_hidden_trait_labels":  "Use observed cues and outcome labels rather than assigning unseen personality traits.",
+                            "knowledge_base_is_not_training":  "Retrieving research informs prompts; outcome-labeled examples and evaluation are needed to train or validate a predictor."
+                        },
+    "collection_note":  "Structured research extraction, not scoring weights. Consult the newer Markdown evidence reviews for additional studies and access/version updates."
+}

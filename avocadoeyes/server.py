@@ -7,17 +7,13 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from jsonschema import ValidationError
-
 from .runner import Run
-from .two_stage import TwoStage
 
 STATIC = Path(__file__).parent / "static"
 
 
 def make_server(port=7860, run=None):
-    session = {"run": run or TwoStage()}
-    simple = isinstance(session["run"], TwoStage)
+    session = {"run": run or Run()}
     token = secrets.token_urlsafe(32)
     lock = threading.Lock()
 
@@ -51,8 +47,6 @@ def make_server(port=7860, run=None):
             if self.path not in files:
                 return self.reply(404, {"error": "Not found"})
             name, mime = files[self.path]
-            if simple and name in ("index.html", "app.js"):
-                name = "two-" + name
             self.reply(200, (STATIC / name).read_bytes(), mime)
 
         def do_POST(self):
@@ -77,23 +71,18 @@ def make_server(port=7860, run=None):
                     else:
                         data = json.loads(body)
                         if self.path == "/api/config":
-                            run.configure(data["config"], data.get("context", {}), data.get("rubric", {}))
+                            run.configure(data["config"], data["context"], data["rubric"])
                         elif self.path == "/api/run":
                             run.execute(data.get("step", ""), data.get("mode", "step"))
                         elif self.path == "/api/correct":
                             run.correct(data["step"], data["output"])
                         elif self.path == "/api/reset":
-                            session["run"] = run.fresh() if simple else Run(adapter=run.adapter)
+                            session["run"] = Run(adapter=run.adapter)
                         else:
                             return self.reply(404, {"error": "Not found"})
                     return self.reply(200, session["run"].snapshot())
             except Exception as exc:
-                if isinstance(exc, ValidationError):
-                    path = ".".join(map(str, exc.absolute_path)) or "output"
-                    message = f"Invalid {path}: {exc.message}"
-                else:
-                    message = str(exc)
-                self.reply(400, {"error": message[:500]})
+                self.reply(400, {"error": str(exc)})
 
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     server.daemon_threads = True

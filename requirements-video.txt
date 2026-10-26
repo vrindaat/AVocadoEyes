@@ -1,8 +1,0 @@
-# GB10 native video runtime. Install the CUDA build before this file:
-# .venv/bin/python -m pip install torch==2.9.1 torchvision==0.24.1 --index-url https://download.pytorch.org/whl/cu130
-# Then: .venv/bin/python -m pip install -r requirements-video.txt
-transformers==5.20.2
-accelerate==1.15.0
-av==16.1.0
-torch==2.9.1
-torchvision==0.24.1

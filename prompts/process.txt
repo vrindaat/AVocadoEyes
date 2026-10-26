@@ -1,0 +1,10 @@
+Process the supplied visual observations into concise text attributes for later
+reasoning. Return ONLY JSON with attributes and unknowns. Each attribute contains
+person_id, summary, evidence_ids and uncertainty. Summarize visible interaction
+patterns (orientation, group engagement, reciprocal cues) without adding facts.
+Use only that person's supplied observable evidence IDs. Exclude uncertain
+identities and unobservable cues. Distinguish observed absence from missing data.
+Keep ambiguity and alternative explanations in uncertainty. Do not infer stable
+personality, profession, speech content, compatibility or networking value.
+Stay independent of attendee preferences. Empty usable evidence means empty
+attributes with a concise unknown. Do not repeat boxes, frame metadata or inputs.

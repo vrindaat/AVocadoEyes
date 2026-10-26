@@ -5,8 +5,10 @@ import json
 import time
 import uuid
 
+from jsonschema import ValidationError
+
 from . import contracts
-from .inference import LocalChat, parse_response
+from .inference import LocalChat, parse_response, response_parts
 from .video import sample
 
 REGISTRY = {}
@@ -30,23 +32,25 @@ def default_config():
     return config
 
 
-def brief(value):
-    """Keep exact image bytes separately as frames; don't repeat them in JSON UI."""
-    if isinstance(value, bytes):
-        return {"bytes": len(value), "sha256": hashlib.sha256(value).hexdigest()}
-    if isinstance(value, str) and value.startswith("data:image/"):
-        return {"image_sha256": hashlib.sha256(value.encode()).hexdigest()}
-    if isinstance(value, list):
-        return [brief(v) for v in value]
-    if isinstance(value, dict):
-        result = {}
-        for key, item in value.items():
-            if key == "images" and isinstance(item, list) and all(isinstance(s, str) for s in item):
-                result[key] = [{"image_sha256": hashlib.sha256(s.encode()).hexdigest()} for s in item]
-            else:
-                result[key] = brief(item)
-        return result
-    return value
+def visible_attempt(attempt):
+    """Browser projection: model output only, with minimal execution state."""
+    result = {k: attempt[k] for k in ("status", "source", "human_assisted", "error") if k in attempt}
+    if "output" in attempt:
+        output = attempt["output"]
+        kind = attempt.get("step", {}).get("kind")
+        if kind == "sample":
+            output = f"{len(output['frames'])} frames sampled."
+        result["output"] = output
+    if "raw" in attempt:
+        try:
+            parts = response_parts(attempt["raw"])
+            if "output" not in result and parts["content"]:
+                result["output"] = parts["content"]
+            if parts["reasoning"]:
+                result["reasoning"] = parts["reasoning"]
+        except (ValueError, TypeError, KeyError, IndexError, AttributeError):
+            pass  # Invalid transport data is never dumped into the browser.
+    return result
 
 
 class Run:
@@ -77,9 +81,9 @@ class Run:
                 root = reference[1:].split(".")[0]
                 if root not in seen:
                     raise ValueError(f"{step['id']}: input must reference an earlier step or external input")
-                if step["kind"] == "observe" and root in ("context", "rubric"):
+                if step["kind"] in ("observe", "process") and root in ("context", "rubric"):
                     raise ValueError("Observation must remain independent of attendee context/rubric")
-            if step["kind"] in ("observe", "rank", "model"):
+            if step["kind"] in ("observe", "process", "rank", "model"):
                 if step.get("model") not in config["models"] or not step.get("prompt"):
                     raise ValueError("Model steps require a configured model alias and prompt")
             seen.add(step["id"])
@@ -153,7 +157,11 @@ class Run:
                 attempt["output"] = REGISTRY[step["kind"]](self, step, inputs, attempt)
                 attempt["status"] = "current"
             except Exception as exc:
-                attempt["error"] = str(exc)
+                if isinstance(exc, ValidationError):
+                    path = ".".join(map(str, exc.absolute_path)) or "output"
+                    attempt["error"] = f"Invalid {path}: {exc.message}"[:500]
+                else:
+                    attempt["error"] = str(exc)[:500]
             attempt["elapsed_s"] = round(time.perf_counter() - begin, 4)
             self.histories.setdefault(step["id"], []).append(copy.deepcopy(attempt))
             self.results[step["id"]] = attempt
@@ -173,6 +181,8 @@ class Run:
             contracts.observations(output, inputs["frames"])
         elif step["kind"] == "rank":
             contracts.ranking(output, inputs["observations"])
+        elif step["kind"] == "process":
+            contracts.attributes(output, inputs["observations"])
         elif step["kind"] == "sample":
             raise ValueError("Edit sampling settings and rerun instead of correcting frame bytes")
         revision = {"revision": str(uuid.uuid4()), "source": "human", "parent_revision": current["revision"],
@@ -189,7 +199,8 @@ class Run:
             if step["kind"] == "sample" and result.get("status") == "current":
                 frames = result["output"]["frames"]
         return {"run_id": self.id, "config": self.config, "context": self.context, "rubric": self.rubric,
-                "filename": self.filename, "results": brief(self.results), "history": brief(self.histories),
+                "filename": self.filename, "results": {sid: visible_attempt(r) for sid, r in self.results.items()},
+                "history": {sid: [visible_attempt(r) for r in attempts] for sid, attempts in self.histories.items()},
                 "frames": frames, "kinds": sorted(REGISTRY), "route": getattr(self.adapter, "base_url", "test adapter")}
 
 
@@ -207,7 +218,7 @@ def model_step(run, step, inputs, attempt, frames=None):
         text_inputs["frames"] = [{k: v for k, v in f.items() if k != "image"} for f in frames]
     settings = copy.deepcopy(step["settings"])
     prompt = step["prompt"]
-    definition = {"observe": "observation", "rank": "ranking"}.get(step["kind"])
+    definition = {"observe": "observation", "process": "attributes", "rank": "ranking"}.get(step["kind"])
     if definition:
         schema = contracts.output_schema(definition)
         prompt += "\n\nRequired output JSON schema:\n" + json.dumps(schema)
@@ -217,7 +228,7 @@ def model_step(run, step, inputs, attempt, frames=None):
     response = run.adapter.complete(model, prompt, text_inputs, settings, frames)
     attempt.update(response)  # Preserve exact envelope, including backend explanation fields.
     if response.get("http_status", 200) >= 400:
-        raise ValueError(f"Local inference returned HTTP {response['http_status']}; inspect the original response")
+        raise ValueError(f"Local inference returned HTTP {response['http_status']}; check the local model service")
     attempt["parsed"] = parse_response(response["raw"])
     return attempt["parsed"]
 
@@ -243,6 +254,8 @@ def rank_step(run, step, inputs, attempt):
         if source["kind"] == "sample" and result.get("status") == "current":
             frames.extend(result["output"]["frames"])
     contracts.observations(observation, frames)
+    if "attributes" in inputs:
+        contracts.attributes(inputs["attributes"], observation)
     eligible = [p for p in observation["people"] if not p["identity_uncertain"] and
                 any(e["visibility"] != "unobservable" for e in p["evidence"])]
     context = inputs.get("context", {})
@@ -254,6 +267,19 @@ def rank_step(run, step, inputs, attempt):
         if "identity_uncertain" not in person:
             raise ValueError("Rank requires validated observations")
     return contracts.ranking(model_step(run, step, inputs, attempt), observation)
+
+
+@register("process")
+def process_step(run, step, inputs, attempt):
+    observation = inputs["observations"]
+    frames = [frame for source in run.config["steps"]
+              if source["kind"] == "sample" and run.results.get(source["id"], {}).get("status") == "current"
+              for frame in run.results[source["id"]]["output"]["frames"]]
+    contracts.observations(observation, frames)
+    if not any(not p["identity_uncertain"] and any(e["visibility"] != "unobservable" for e in p["evidence"])
+               for p in observation["people"]):
+        return {"attributes": [], "unknowns": ["No identifiable people with usable evidence."]}
+    return contracts.attributes(model_step(run, step, inputs, attempt), observation)
 
 
 @register("model")

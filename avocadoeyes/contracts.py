@@ -56,3 +56,16 @@ def ranking(value, observation):
         if not set(candidate["evidence_ids"]) <= usable:
             raise ValueError("Ranking cites absent, unobservable or another person's evidence")
     return value
+
+
+def attributes(value, observation):
+    validate(value, "output", "attributes")
+    people = {p["id"]: p for p in observation["people"]}
+    for attribute in value["attributes"]:
+        person = people.get(attribute["person_id"])
+        if person is None or person["identity_uncertain"]:
+            raise ValueError("Attribute cites an unknown or ambiguous person")
+        usable = {e["id"] for e in person["evidence"] if e["visibility"] != "unobservable"}
+        if not set(attribute["evidence_ids"]) <= usable:
+            raise ValueError("Attribute cites absent, unobservable or another person's evidence")
+    return value

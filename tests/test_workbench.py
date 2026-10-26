@@ -13,8 +13,8 @@ from unittest.mock import patch
 import imageio_ffmpeg
 
 from avocadoeyes import contracts
-from avocadoeyes.inference import LocalChat
-from avocadoeyes.runner import Run, default_config
+from avocadoeyes.inference import LocalChat, response_parts
+from avocadoeyes.runner import Run, default_config, visible_attempt
 from avocadoeyes.server import make_server
 from avocadoeyes.video import sample
 
@@ -27,6 +27,8 @@ RANK = {"status": "ok", "candidates": [{"person_id": "p1", "preference_index": 6
         "connection": "May fit the goal", "effort": "Unknown", "reason": "Visible group orientation",
         "evidence_ids": ["e1"], "uncertainty": "Sparse frames"}], "unknowns": ["Actual enjoyment unmeasured"]}
 
+ATTR = {"attributes": [{"person_id": "p1", "summary": "Group orientation", "evidence_ids": ["e1"], "uncertainty": "Could be passing through"}], "unknowns": ["Speech inaudible"]}
+
 
 class FakeAdapter:
     base_url = "http://127.0.0.1/test"
@@ -37,7 +39,7 @@ class FakeAdapter:
 
     def complete(self, model, prompt, inputs, settings, frames=None):
         self.calls.append(copy.deepcopy({"model": model, "prompt": prompt, "inputs": inputs, "settings": settings, "frames": frames}))
-        content = "not JSON" if self.bad else json.dumps(OBS if frames else RANK)
+        content = "not JSON" if self.bad else json.dumps(OBS if frames else (ATTR if "context" not in inputs else RANK))
         return {"raw": json.dumps({"model": model, "choices": [{"message": {"content": content, "reasoning": "Backend explanation"}}]})}
 
 
@@ -46,7 +48,7 @@ class RunnerTests(unittest.TestCase):
         self.adapter = FakeAdapter()
         self.run = Run(self.adapter)
         config = default_config()
-        config["models"] = {"vision": "local-test", "reasoning": "local-test"}
+        config["models"] = {"vision": "vision-test", "processing": "process-test", "reasoning": "rank-test"}
         self.run.configure(config, {"goals": "Find a small group"}, self.run.rubric)
         self.run.upload(b"synthetic", "test.mp4")
         self.patcher = patch("avocadoeyes.runner.sample", return_value={"frames": FRAMES})
@@ -59,12 +61,60 @@ class RunnerTests(unittest.TestCase):
     def test_complete_pipeline_and_exact_inspection(self):
         self.execute()
         self.assertEqual(self.run.results["rank"]["output"], RANK)
-        self.assertEqual(len(self.adapter.calls), 2)
+        self.assertEqual(len(self.adapter.calls), 3)
         self.assertNotIn("context", self.adapter.calls[0]["inputs"])
         self.assertEqual(self.adapter.calls[0]["frames"], FRAMES)
         self.assertIn("Backend explanation", self.run.results["observe"]["raw"])
         self.assertIn("elapsed_s", self.run.results["rank"])
         self.assertEqual(self.run.snapshot()["frames"], FRAMES)
+
+    def test_three_models_text_processing_and_compact_snapshot(self):
+        self.execute()
+        self.assertEqual([call["model"] for call in self.adapter.calls], ["vision-test", "process-test", "rank-test"])
+        self.assertIsNone(self.adapter.calls[1]["frames"])
+        self.assertIsNone(self.adapter.calls[2]["frames"])
+        self.assertEqual(self.adapter.calls[2]["inputs"]["attributes"], ATTR)
+        snapshot = self.run.snapshot()
+        self.assertEqual(snapshot["results"]["process"]["output"], ATTR)
+        self.assertEqual(snapshot["results"]["process"]["reasoning"], "Backend explanation")
+        for rows in [snapshot["results"].values(), *snapshot["history"].values()]:
+            for row in rows:
+                self.assertFalse(set(row) & {"raw", "request", "inputs", "parsed", "elapsed_s", "revision", "local_model_manifest", "effective_prompt"})
+        self.assertEqual(snapshot["results"]["sample"]["output"], "1 frames sampled.")
+        self.assertIn("raw", self.run.histories["process"][0])
+        config = copy.deepcopy(self.run.config)
+        config["models"]["processing"] = "other-process-model"
+        self.run.configure(config, self.run.context, self.run.rubric)
+        self.assertEqual(self.run.results["observe"]["status"], "current")
+        self.assertEqual(self.run.results["validate"]["status"], "current")
+        self.assertEqual(self.run.results["process"]["status"], "stale")
+        self.assertEqual(self.run.results["rank"]["status"], "stale")
+        self.assertTrue(self.run.execute("process", "from"))
+        self.assertEqual(self.adapter.calls[-2]["model"], "other-process-model")
+
+    def test_attribute_correction_and_invalid_output(self):
+        self.execute()
+        bad = copy.deepcopy(ATTR)
+        bad["attributes"][0]["evidence_ids"] = ["invented"]
+        with self.assertRaises(ValueError):
+            self.run.correct("process", bad)
+        original = copy.deepcopy(self.run.histories["process"][0])
+        self.run.correct("process", ATTR)
+        self.assertEqual(self.run.histories["process"][0], original)
+        self.assertEqual(self.run.results["rank"]["status"], "stale")
+        self.assertTrue(self.run.execute("rank"))
+        self.assertTrue(self.run.results["rank"]["human_assisted"])
+        with patch.object(self.adapter, "complete", return_value={"raw": json.dumps({"message": {"content": json.dumps(bad)}})}):
+            self.assertFalse(self.run.execute("process", "from"))
+        self.assertEqual(self.run.results["rank"]["status"], "stale")
+
+    def test_existing_four_step_configuration_remains_supported(self):
+        config = copy.deepcopy(self.run.config)
+        config["steps"] = [step for step in config["steps"] if step["kind"] != "process"]
+        del config["steps"][-1]["inputs"]["attributes"]
+        self.run.configure(config, self.run.context, self.run.rubric)
+        self.execute()
+        self.assertEqual(len(self.adapter.calls), 2)
 
     def test_preferences_reuse_frozen_observations(self):
         self.execute()
@@ -74,7 +124,7 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(self.run.results["observe"]["status"], "current")
         self.assertTrue(self.run.execute("rank"))
         self.assertEqual(self.run.results["observe"]["revision"], revision)
-        self.assertEqual(len(self.adapter.calls), 3)
+        self.assertEqual(len(self.adapter.calls), 4)
 
     def test_correction_preserves_original_and_propagates_lineage(self):
         self.execute()
@@ -123,7 +173,7 @@ class RunnerTests(unittest.TestCase):
     def test_insert_step_and_remap_input(self):
         config = copy.deepcopy(self.run.config)
         config["steps"].insert(3, {"id": "review", "kind": "passthrough", "inputs": {"value": "$validate"}, "settings": {}})
-        config["steps"][4]["inputs"]["observations"] = "$review"
+        config["steps"][-1]["inputs"]["observations"] = "$review"
         self.run.configure(config, self.run.context, self.run.rubric)
         self.execute()
         self.assertEqual(self.run.results["review"]["output"], OBS)
@@ -144,7 +194,7 @@ class RunnerTests(unittest.TestCase):
         self.run.correct("observe", weak)
         self.assertTrue(self.run.execute("validate", "from"))
         self.assertEqual(self.run.results["rank"]["output"]["status"], "insufficient_evidence")
-        self.assertEqual(len(self.adapter.calls), 2)
+        self.assertEqual(len(self.adapter.calls), 3)
         self.run.correct("observe", {"people": [], "unknowns": ["Occluded"]})
         self.assertTrue(self.run.execute("validate", "from"))
         self.assertEqual(self.run.results["rank"]["output"]["candidates"], [])
@@ -168,6 +218,17 @@ class ContractTests(unittest.TestCase):
         contracts.validate(default_config(), "config")
         contracts.observations(OBS, FRAMES)
         contracts.ranking(RANK, OBS)
+
+    def test_attributes_reject_invalid_provenance(self):
+        contracts.attributes(ATTR, OBS)
+        for change in ("person", "evidence", "ambiguous", "unobservable"):
+            attr, obs = copy.deepcopy(ATTR), copy.deepcopy(OBS)
+            if change == "person": attr["attributes"][0]["person_id"] = "invented"
+            if change == "evidence": attr["attributes"][0]["evidence_ids"] = ["invented"]
+            if change == "ambiguous": obs["people"][0]["identity_uncertain"] = True
+            if change == "unobservable": obs["people"][0]["evidence"][0]["visibility"] = "unobservable"
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                contracts.attributes(attr, obs)
 
     def test_observation_rejects_bad_scene_references(self):
         for change in ("frame", "box", "duplicate", "evidence"):
@@ -254,6 +315,17 @@ class HTTPTests(unittest.TestCase):
 
 
 class AdapterTests(unittest.TestCase):
+    def test_filter_native_and_compatible_output_with_reasoning_on_failure(self):
+        for field in ("thinking", "reasoning", "reasoning_content"):
+            for native in (True, False):
+                message = {"content": "not JSON", field: "Model reasoning"}
+                envelope = {"message": message} if native else {"choices": [{"message": message}]}
+                raw = json.dumps({**envelope, "model": "noise", "eval_count": 77})
+                self.assertEqual(response_parts(raw), {"content": "not JSON", "reasoning": "Model reasoning"})
+                visible = visible_attempt({"status": "error", "raw": raw, "error": "Invalid JSON"})
+                self.assertEqual(visible, {"status": "error", "error": "Invalid JSON", "output": "not JSON", "reasoning": "Model reasoning"})
+        self.assertEqual(visible_attempt({"raw": "broken transport", "status": "error"}), {"status": "error"})
+
     def test_requires_explicit_route_and_refuses_public_route(self):
         adapter = LocalChat()
         adapter.base_url = ""

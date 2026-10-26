@@ -56,6 +56,23 @@ def main():
             assert page.locator(".candidate").count() == 1
             assert page.locator("canvas").count() == 2
             assert run.results["rank"]["status"] == "current"
+            page.locator('#inspect-step').select_option('process')
+            expect(page.locator('#inspection')).to_contain_text('Group orientation')
+            expect(page.locator('#inspection')).not_to_contain_text('effective_prompt')
+            expect(page.locator('#inspection')).not_to_contain_text('choices')
+            page.locator('#inspection').get_by_text('Model reasoning', exact=True).click()
+            expect(page.locator('#inspection')).to_contain_text('Backend explanation')
+            original_vision = run.config['models'][run.config['steps'][1]['model']]
+            page.get_by_role('combobox', name='process model', exact=True).fill('qwen3.5:35b')
+            page.locator('#save').click()
+            expect(page.locator('#notice')).to_contain_text('Saved.')
+            assert run.config['models'][run.config['steps'][1]['model']] == original_vision
+            assert run.results['observe']['status'] == 'current'
+            assert run.results['process']['status'] == 'stale'
+            assert run.results['rank']['status'] == 'stale'
+            page.locator('.step').nth(3).get_by_role('button', name='Run from here', exact=True).click()
+            expect(page.locator('#notice')).to_contain_text('Execution complete')
+            assert run.adapter.calls[-2]['model'] == 'qwen3.5:35b'
             revision = run.results["observe"]["revision"]
             page.locator("#preferences").fill("Quiet, thoughtful interactions")
             page.locator("#save").click()
@@ -63,7 +80,7 @@ def main():
             assert run.results["rank"]["status"] == "stale"
             assert run.results["observe"]["revision"] == revision
             assert page.locator(".candidate").count() == 0
-            page.locator(".step").nth(3).get_by_role("button", name="Run step", exact=True).click()
+            page.locator(".step").nth(4).get_by_role("button", name="Run step", exact=True).click()
             expect(page.locator("#notice")).to_contain_text("Execution complete")
             page.locator("#inspect-step").select_option("observe")
             correction = copy.deepcopy(OBS)

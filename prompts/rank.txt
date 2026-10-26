@@ -11,3 +11,7 @@ candidates and status insufficient_evidence. Distinguish observed cues, user
 impressions, optional uncertain trait hypotheses and outcome estimates. Do not
 invent personality facts, calibrated success probabilities or research weights.
 Do not equate animation with fatigue cost. Explain uncertainty concisely.
+When processed attributes are supplied, use their summaries and uncertainty to
+reason about fit to the attendee's explicit goals. Cross-check them against the
+original observations; summaries are model estimates, not additional evidence.
+Keep reasons concise and grounded in cited visible cues.

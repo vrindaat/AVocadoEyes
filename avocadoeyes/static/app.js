@@ -1,6 +1,8 @@
 let state, token, draft, dirty = false, busy = false, videoURL, selectedPerson;
 const $ = id => document.getElementById(id);
 const pretty = value => JSON.stringify(value, null, 2);
+const modelKinds = ['observe', 'process', 'rank', 'model'];
+const modelNames = ['qwen3-vl:32b', 'qwen3.5:35b', 'qwen3-vl:8b-instruct', 'qwen3.5:9b'];
 function el(tag, text, cls) { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; if (cls) e.className = cls; return e; }
 function notice(text, error = false) { $('notice').textContent = text; $('notice').className = error ? 'error' : ''; }
 function changed() { dirty = true; $('recommendations').textContent = 'Unsaved changes. Save edits and rerun affected steps to see current suggestions.'; notice('Unsaved edits — run buttons save these edits before executing.'); }
@@ -23,16 +25,30 @@ function editorSteps() {
   $('steps').replaceChildren();
   draft.steps.forEach((step, index) => {
     const card = el('div', undefined, 'step'), head = el('div', undefined, 'step-head');
-    head.append(el('span', `${step.id} / ${step.kind}`, 'step-name'));
+    const names = {observe: 'Vision deciphering', process: 'Process observations', rank: 'Reason over text attributes', sample: 'Sample frames', validate: 'Validate evidence'};
+    head.append(el('span', `${step.id} · ${names[step.kind] || step.kind}`, 'step-name'));
     const status = state.results[step.id]?.status || 'ready'; head.append(el('span', status, `badge ${status}`)); card.append(head);
     const controls = el('div', undefined, 'step-controls');
     controls.append(button('Run step', () => run(step.id, 'step')), button('Run from here', () => run(step.id, 'from')),
       button('↑', async () => { if (index) { [draft.steps[index - 1], draft.steps[index]] = [draft.steps[index], draft.steps[index - 1]]; editorSteps(); $('config').value = pretty(draft); changed(); } }),
       button('↓', async () => { if (index < draft.steps.length - 1) { [draft.steps[index + 1], draft.steps[index]] = [draft.steps[index], draft.steps[index + 1]]; editorSteps(); $('config').value = pretty(draft); changed(); } }),
       button('Remove', async () => { draft.steps.splice(index, 1); editorSteps(); $('config').value = pretty(draft); changed(); })); card.append(controls);
-    const details = el('details'); details.append(el('summary', 'Prompt, model & step settings'));
-    if (['observe', 'rank', 'model'].includes(step.kind)) {
-      field(details, 'Model alias', step.model || '', v => step.model = v.trim());
+    if (modelKinds.includes(step.kind)) {
+      const label = el('label', 'Model'), input = el('input'), choices = el('datalist');
+      input.value = draft.models[step.model] || ''; input.setAttribute('aria-label', `${step.id} model`);
+      choices.id = `models-${step.id}`; input.setAttribute('list', choices.id);
+      [...new Set([...modelNames, ...Object.values(draft.models)])].forEach(name => { const option = el('option'); option.value = name; choices.append(option); });
+      input.oninput = () => {
+        // A private alias prevents a shared alias from changing another stage.
+        let alias = `stage_${step.id}`;
+        while (draft.steps.some(other => other !== step && other.model === alias)) alias += '_';
+        step.model = alias; draft.models[alias] = input.value.trim();
+        $('config').value = pretty(draft); changed();
+      };
+      label.append(input, choices); card.append(label);
+    }
+    const details = el('details'); details.append(el('summary', 'Prompt & step settings'));
+    if (modelKinds.includes(step.kind)) {
       field(details, 'Prompt', step.prompt || '', v => step.prompt = v, 7);
       field(details, 'Additional inputs (JSON)', step.extra || {}, v => { try { step.extra = JSON.parse(v); } catch { /* invalid edits are caught before saving */ step.extra = v; } }, 3);
     }
@@ -73,15 +89,29 @@ function recommendations() {
   });
   output.unknowns.forEach(text => box.append(el('p', `Unknown: ${text}`, 'muted')));
 }
+function showOutput(parent, result, kind) {
+  if (result.error) parent.append(el('p', result.error, 'error'));
+  if (result.output !== undefined) parent.append(el('pre', kind === 'validate' ? 'Evidence validated.' : typeof result.output === 'string' ? result.output : pretty(result.output)));
+  if (result.reasoning) {
+    const reasoning = el('details'); reasoning.append(el('summary', 'Model reasoning'), el('pre', result.reasoning)); parent.append(reasoning);
+  }
+}
 function inspect() {
   const id = $('inspect-step').value, result = state.results[id]; $('inspection').replaceChildren();
+  const kind = state.config.steps.find(step => step.id === id)?.kind;
+  $('correction-panel').hidden = !result || result.status !== 'current' || kind === 'sample';
   if (!result) { $('inspection').append(el('p', 'This step has not run yet.')); $('correction').value = ''; return; }
-  $('inspection').append(el('p', `${result.status} · ${result.source} · revision ${result.revision} · ${result.elapsed_s}s`));
-  if (result.error) $('inspection').append(el('p', result.error, 'error'));
-  const pre = el('pre', pretty(result)); $('inspection').append(pre);
-  const history = el('details'); history.append(el('summary', `All attempts & original outputs (${state.history[id]?.length || 0})`), el('pre', pretty(state.history[id] || []))); $('inspection').append(history);
+  $('inspection').append(el('span', result.status + (result.source === 'human' ? ' · human correction' : ''), `badge ${result.status}`));
+  showOutput($('inspection'), result, kind);
+  const attempts = state.history[id] || [];
+  if (attempts.length > 1) {
+    const history = el('details'); history.append(el('summary', `Previous outputs (${attempts.length - 1})`));
+    attempts.slice(0, -1).forEach(attempt => { const entry = el('div'); entry.append(el('p', attempt.source === 'human' ? 'Human correction' : 'Model output', 'muted')); showOutput(entry, attempt, kind); history.append(entry); });
+    $('inspection').append(history);
+  }
   $('correction').value = pretty(result.output || {});
 }
+
 function render(next) {
   state = next; draft = structuredClone(next.config); dirty = false;
   $('route').textContent = state.route ? `Configured route: ${state.route} · verify local GB10 execution` : 'Inference route not configured';
@@ -97,13 +127,13 @@ async function save() {
 async function run(step, mode) {
   await save(); notice(`Running ${mode === 'all' ? 'pipeline' : step}… Local model requests can take several minutes.`);
   const next = await api('/api/run', { step, mode }); render(next); const errors = Object.values(state.results).filter(r => r.status === 'error');
-  if (errors.length) notice(errors.map(e => e.error).join('\n'), true); else notice('Execution complete. Inspect evidence, uncertainty, and revision history below.');
+  if (errors.length) notice(errors.map(e => e.error).join('\n'), true); else notice('Execution complete.');
 }
 $('save').onclick = () => task(async () => { await save(); notice('Saved. Affected downstream results are marked stale.'); });
 $('apply-json').onclick = () => task(async () => { draft = JSON.parse($('config').value); await save(); notice('Pipeline JSON saved.'); });
 $('config').oninput = () => { try { draft = JSON.parse($('config').value); } catch { /* handled on execution */ draft = null; } changed(); };
 $('run-all').onclick = () => task(() => run('', 'all'));
-$('add-step').onclick = () => task(async () => { const kind = $('new-kind').value, id = `${kind}_${Date.now()}`; draft.steps.push({ id, kind, inputs: { value: '$validate' }, settings: {}, ...(['model','observe','rank'].includes(kind) ? { model: 'reasoning', prompt: 'Return a JSON object.', extra: {} } : {}) }); editorSteps(); $('config').value = pretty(draft); changed(); });
+$('add-step').onclick = () => task(async () => { const kind = $('new-kind').value, id = `${kind}_${Date.now()}`; draft.steps.push({ id, kind, inputs: { value: '$validate' }, settings: {}, ...(modelKinds.includes(kind) ? { model: 'reasoning', prompt: 'Return a JSON object.', extra: {} } : {}) }); editorSteps(); $('config').value = pretty(draft); changed(); });
 $('upload').onclick = () => task(async () => {
   const file = $('video').files[0]; if (!file) throw Error('Choose a video first.'); if (!$('consent').checked) throw Error('Confirm permission to process the clip.'); if (file.size > 64 * 1024 * 1024) throw Error('Choose a clip up to 64 MiB.');
   await save(); const next = await api('/api/upload', file, { 'Content-Type': 'application/octet-stream', 'X-Upload-Consent': 'yes', 'X-Filename': encodeURIComponent(file.name) });
@@ -113,4 +143,4 @@ $('reset').onclick = () => task(async () => { const next = await api('/api/reset
 $('correct').onclick = () => task(async () => { const step = $('inspect-step').value, output = JSON.parse($('correction').value); if (dirty) await save(); const next = await api('/api/correct', { step, output }); render(next); notice('Human correction saved as a separate revision. Rerun downstream steps.'); });
 $('inspect-step').onchange = inspect;
 ['preferences','goals','current-state','energy','rubric'].forEach(id => $(id).oninput = changed);
-fetch('/api/state').then(r => r.json()).then(next => { token = next.token; render(next); notice('Ready. Add context and upload an authorized clip. Local model aliases are configured in Pipeline JSON.'); }).catch(e => notice(e.message, true));
+fetch('/api/state').then(r => r.json()).then(next => { token = next.token; render(next); notice('Ready. Add context and upload an authorized clip. Choose a model for each stage.'); }).catch(e => notice(e.message, true));

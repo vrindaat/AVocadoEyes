@@ -54,6 +54,8 @@ class LocalChat:
             message["images"] = images
         payload = {"model": model, "messages": [message], "stream": False, "think": settings.get("think", False),
                    "format": settings.get("format", "json"), "options": options}
+        if settings.get("format", "json") is None:
+            payload.pop("format", None)
         if "keep_alive" in settings:
             payload["keep_alive"] = settings["keep_alive"]
         headers = {"Content-Type": "application/json"}
@@ -93,13 +95,26 @@ class LocalChat:
                 "local_model_manifest": manifest}
 
 
-def parse_response(raw):
+def response_parts(raw):
+    """Extract only model-authored content/reasoning from supported envelopes."""
     envelope = json.loads(raw)
-    content = envelope["message"]["content"] if "message" in envelope else envelope["choices"][0]["message"]["content"]
+    message = envelope.get("message")
+    if message is None:
+        message = envelope.get("choices", [{}])[0].get("message", {})
+    reasoning = []
+    for key in ("thinking", "reasoning", "reasoning_content"):
+        value = message.get(key)
+        if isinstance(value, str) and value.strip() and value not in reasoning:
+            reasoning.append(value)
+    return {"content": message.get("content", ""), "reasoning": "\n\n".join(reasoning)}
+
+
+def parse_response(raw):
+    content = response_parts(raw)["content"]
     if not isinstance(content, str):
         raise ValueError("Expected JSON text in the model response")
     if not content.strip():
-        raise ValueError("Model returned no final JSON; inspect raw response, disable thinking or increase num_predict")
+        raise ValueError("Model returned no final JSON; disable thinking or increase num_predict")
     text = content.strip()
     if text.startswith("```") and text.endswith("```"):
         text = text.split("\n", 1)[1].rsplit("```", 1)[0]

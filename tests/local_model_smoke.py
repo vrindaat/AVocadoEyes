@@ -16,8 +16,24 @@ from avocadoeyes.runner import Run, default_config
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ranking-only", action="store_true", help="Check real ranking inference against explicit frozen synthetic observations")
+    parser.add_argument("--text-stages", action="store_true", help="Check attribute extraction then ranking on frozen synthetic observations")
     args = parser.parse_args()
     adapter = LocalChat()
+    if args.text_stages:
+        from test_workbench import OBS, FRAMES
+        run = Run(adapter)
+        run.configure(run.config, {"goals": "Find a small group for a calm conversation"}, run.rubric)
+        # Frozen synthetic observations exercise real text models without private footage.
+        run.results["sample"] = {"status": "current", "output": {"frames": FRAMES}, "revision": "synthetic-frames"}
+        run.results["validate"] = {"status": "current", "output": OBS, "revision": "synthetic-observations"}
+        success = run.execute("process", "from")
+        print(json.dumps({"text_stages_check": success,
+                          "steps": {sid: {k: run.results[sid][k] for k in ("status", "model", "elapsed_s", "error") if k in run.results[sid]}
+                                    for sid in ("process", "rank") if sid in run.results},
+                          "note": "Frozen synthetic observations; no visual accuracy or outcome-quality claim."}, indent=2), flush=True)
+        if not success:
+            raise SystemExit(1)
+        return
     if args.ranking_only:
         from test_workbench import OBS
         inputs = {"observations": OBS, "context": {"goals": "Find a small group for a calm conversation", "personality_preferences": "Prefer quiet reciprocal interactions"},
